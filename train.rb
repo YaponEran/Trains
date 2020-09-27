@@ -1,12 +1,24 @@
 class Train
+  include InstanceCounter
+  include Factory
 
   attr_reader :number, :type, :station, :num_of_vagons, :route, :speed
+  @@trains = {}
+  NUMBER_EXAMPLE = /^[a-zа-я\d]{3}-?[a-zа-я\d]{2}/i.freeze
+
+  def self.find(num)
+    @@trains[num]
+  end
 
   def initialize(number)
     @number = number
     @type = type
     @num_of_vagons = []
     @speed = 0
+    @@trains[@number] = self
+    register_instance
+
+    validate!
   end
 
   def move_train
@@ -58,4 +70,16 @@ class Train
       route.stations[route.stations.index(station) - 1]
     end
   end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+  def validate!
+    raise "Invalid number" if number !~ NUMBER_EXAMPLE
+  end
+
 end

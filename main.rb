@@ -1,3 +1,6 @@
+require_relative "factory"
+require_relative "instance_counter"
+require_relative "vagon"
 require_relative "train"
 require_relative "station"
 require_relative "route"

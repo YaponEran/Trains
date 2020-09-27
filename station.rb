@@ -1,9 +1,21 @@
 class Station
+  include InstanceCounter
   attr_reader :name, :trains
+  @@stations = []
+
+  NAME_EXAMPLE = /^[А-ЯЁ][а-яё]{2,15}$/x
 
   def initialize(name)
     @name = name
     @trains = []
+    @@stations.push(self)
+
+    validate!
+    register_instance
+  end
+
+  def self.all
+    @@stations
   end
 
   def add_train(train)
@@ -17,5 +29,17 @@ class Station
   def sent_train(train_type)
     @trains.delete(train_type)
   end
+
+  def valid?
+    validate!
+    true
+   rescue
+    false
+  end
+
+  def validate!
+    raise "Invalid name" if name !~ NAME_EXAMPLE
+  end
+
 end 
 
